@@ -1,0 +1,81 @@
+1)hash partition 
+Q1. Create table Book details with the attribute b_id, title, author, price. Partition this table into 4 partitions using hash partitioning method.  
+  create table book_details_A14(
+b_id number primary key,
+b_title varchar(20),
+b_author varchar(20),
+b_price number
+)
+partition by hash (b_id)(
+partotion p1, 
+partition p2,
+partition p3,
+partition p4);
+ 
+// table created
+
+insert into book_details_A14 values ( 101, 'jvm','a shankar', 500);
+/
+1.	of Display the contents table. 
+  select * from book_details_A14;
+/
+
+2.	Display the contents of each partition
+select * from book_details_A14 partition(p1);
+/
+select * from book_details_A14 partition(p2); 
+/
+select * from book_details_A14 partition(p3);
+/
+select * from book_details_A14 partition(p4);
+
+3.	Rename the partition p1 to pp1. 
+ alter table book_details_A14
+rename partition p1 to pp1;
+/
+4.	Display the partition names of table book_details. 
+ select partition name
+from user_tab_partitions
+where table_name = 'book_details_A14';
+/
+
+
+Q2.Create a table student_details with the attributes Roll_no, names, marks using hash partitioning with 3 partitions.
+create table student_detailsA14(
+roll_no number primary key,
+name varchar (20),
+marks number
+)
+partition by hash(roll_no)(
+partition p1,
+partition p2,
+partition p3);
+//table creataed
+insert into student_detailsA14 values( 1, 'pankaj',66);
+create 3 rows
+ 
+
+select * from student_detailsA14;
+/
+1.  Display the content of the partions.
+slect * from student_detailsA14 partition (p1);
+/
+select * from student_details partition (p2);
+/
+select * from student_details partition (p3);
+  
+
+2.	Delete one partition.
+alter table student_detailsA14 coalesce partition;
+/
+
+3.	Display the name of existing partitions.
+select partition_name
+from user_tab_partitions
+where table_name = 'student_details';
+/
+
+
+
+
+

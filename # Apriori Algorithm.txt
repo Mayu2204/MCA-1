@@ -1,0 +1,81 @@
+# Apriori Algorithm
+
+# Install and load necessary libraries
+# Uncomment the following lines to install the packages if not already installed
+# install.packages("plyr")
+# install.packages("arules")
+# install.packages("arulesViz")
+# install.packages("ggplot2")
+
+library(plyr)
+library(arules)
+library(ggplot2)
+library(arulesViz)
+
+# Read the data
+df_groceries <- read.csv("Groceries_dataset.csv")
+
+# Data cleaning and manipulations using R
+# Convert Member_number to numeric and sort the data frame based on Member_number
+df_groceries$Member_number <- as.numeric(df_groceries$Member_number)
+df_sorted <- df_groceries[order(df_groceries$Member_number),]
+View(df_sorted)
+
+# Convert the data frame into transactions format
+# Combine items bought at the same time into one row based on Member_number and Date
+df_itemList <- ddply(df_sorted, c("Member_number", "Date"),
+                     function(df1) paste(df1$itemDescription, collapse = ","))
+
+View(df_itemList)
+
+# Remove unnecessary columns (Member_number and Date)
+df_itemList$Member_number <- NULL
+df_itemList$Date <- NULL
+
+# Rename column for ease of use
+colnames(df_itemList) <- c("ItemList")
+View(df_itemList)
+
+# Write the processed data to a CSV file
+write.csv(df_itemList, "new_Grocery_ItemList1.csv", row.names = TRUE)
+
+# Load the transactions from the new CSV file
+txn <- read.transactions(file = "new_Grocery_ItemList1.csv",
+                         rm.duplicates = TRUE,
+                         format = "basket",
+                         sep = ",",
+                         cols = 1)
+
+# Display transaction summary
+txn
+
+# Run the Apriori algorithm on the transactions with minimum support and confidence values
+basket_rules <- apriori(txn, parameter = list(supp = 0.01, conf = 0.01))
+
+# Print the rules and inspect them
+print(basket_rules)
+inspect(basket_rules)
+
+# Plot the rules
+plot(basket_rules)
+
+# Display a frequency plot of the top 5 items
+itemFrequencyPlot(txn, topN = 5)
+
+# Example 2: Using built-in Groceries dataset
+# Loading libraries
+library(arules)
+library(arulesViz)
+library(RColorBrewer)
+
+# Load the Groceries dataset
+data("Groceries")
+
+# Apply the Apriori algorithm
+rules <- apriori(Groceries, parameter = list(supp = 0.01, conf = 0.2))
+
+# Inspect the top 10 rules
+inspect(rules[1:10])
+
+# Display a frequency plot of the top 10 items
+itemFrequencyPlot(Groceries, topN = 10)

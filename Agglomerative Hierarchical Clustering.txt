@@ -1,0 +1,33 @@
+
+
+# Agglomerative Hierarchical Clustering
+
+# Free up memory and perform garbage collection
+rm(list = ls()) 
+gc()
+
+# Load required library
+library(cluster)
+
+# Load dataset
+data1 <- read.csv("seeds_dataset1.csv", header = TRUE)
+View(data1)
+
+# Plot the dataset
+plot(data1)
+
+# Compute the distance matrix using the Euclidean distance
+distMat <- dist(data1, method = "euclidean")
+print(distMat)
+
+# Perform hierarchical clustering using the "single" linkage method
+Clust1 <- hclust(distMat, method = "single")
+print(Clust1)
+
+# Plot the hierarchical clustering result
+plot(Clust1, main = "Hierarchical Clustering Dendrogram", 
+     xlab = "Observations", sub = "", cex = 0.9)
+
+# Convert hclust object into a dendrogram and plot
+dend <- as.dendrogram(Clust1)
+plot(dend, main = "Dendrogram from Clustering")

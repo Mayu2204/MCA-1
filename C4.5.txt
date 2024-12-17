@@ -1,0 +1,28 @@
+# Implementation of C4.5 on the Iris dataset
+
+# Install the RWeka package (uncomment the next line if not already installed)
+# install.packages("RWeka")
+
+# Load the RWeka library
+library(RWeka)
+
+# Load the Iris dataset and split it into training and testing sets
+data_train <- iris[1:105, ]  # First 105 rows for training
+data_test <- iris[106:150, ] # Remaining rows for testing
+
+# Fit the model using the J48 algorithm
+fit <- J48(Species ~ ., data_train)
+
+# Summarize the model
+summary(fit)
+
+# Make predictions on the test data
+predictions <- predict(fit, data_test)
+
+# Create the confusion matrix
+cm <- table(predictions, iris[106:150, "Species"])
+cm
+
+# Calculate accuracy
+accuracy <- sum(diag(cm)) / length(iris[106:150, "Species"])
+accuracy

@@ -1,0 +1,42 @@
+# Naive Bayes Algorithm on Iris Dataset
+
+# Load the Iris dataset
+data(iris)
+
+# View structure of the dataset
+str(iris)
+
+# Install and load necessary packages
+# install.packages("e1071")
+# install.packages("caTools")
+library(e1071)
+library(caTools)  # For splitting data
+
+# Splitting data into training and testing sets (80%-20% split)
+set.seed(120)  # Set seed for reproducibility
+split <- sample.split(iris, SplitRatio = 0.8)
+train_data <- subset(iris, split == TRUE)
+test_data <- subset(iris, split == FALSE)
+
+# View the number of rows in each set
+nrow(iris)        # Total rows
+nrow(train_data)  # Training set rows
+nrow(test_data)   # Testing set rows
+
+# Create the Naive Bayes classifier
+classifier_model <- naiveBayes(Species ~ ., data = train_data)
+classifier_model
+
+# Predict the Species on the test data
+y_pred <- predict(classifier_model, newdata = test_data)
+
+# Confusion Matrix
+cm <- table(test_data$Species, y_pred)  # Actual vs. Predicted
+cm
+
+# Accuracy calculation
+accuracy <- sum(diag(cm)) / length(test_data$Species)
+accuracy
+
+# Print Accuracy in Percentage
+sprintf("Accuracy: %.2f%%", accuracy * 100)

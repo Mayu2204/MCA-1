@@ -1,0 +1,55 @@
+# Data Preprocessing
+
+# Load necessary library
+library(readr)
+
+# Import the dataset
+df <- read.csv('Dataset1.csv')
+
+# View the dataset
+View(df)
+
+# Handling missing data by replacing NA with the mean of the respective column
+df$Age <- ifelse(is.na(df$Age),
+                 ave(df$Age, FUN = function(x) mean(x, na.rm = TRUE)),
+                 df$Age)
+
+df$Salary <- ifelse(is.na(df$Salary),
+                    ave(df$Salary, FUN = function(x) mean(x, na.rm = TRUE)),
+                    df$Salary)
+
+# View the updated dataset
+View(df)
+
+# Encoding categorical data
+df$Country <- factor(df$Country,
+                     levels = c('France', 'Spain', 'Germany'),
+                     labels = c(1.0, 2.0, 3.0))
+
+df$Purchased <- factor(df$Purchased,
+                       levels = c('No', 'Yes'),
+                       labels = c(0, 1))
+
+# Handling missing values in the `Purchased` column by assigning a default value
+df$Purchased[is.na(df$Purchased)] <- 0
+
+# View the updated dataset
+View(df)
+
+# Splitting the dataset into training and test sets
+library(caTools)
+
+set.seed(123)  # Ensure reproducibility
+split <- sample.split(df$Purchased, SplitRatio = 0.8)
+
+# Creating training and test sets
+training_set <- subset(df, split == TRUE)
+test_set <- subset(df, split == FALSE)
+
+# Feature scaling for numeric columns (e.g., Age and Salary)
+training_set[, 2:3] <- scale(training_set[, 2:3])
+test_set[, 2:3] <- scale(test_set[, 2:3])
+
+# Final training and test sets
+training_set
+test_set

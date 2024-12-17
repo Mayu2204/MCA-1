@@ -1,0 +1,164 @@
+Range Partition
+Q1. Create table student with attributes stud_id, name, marks with range partitioning and the partitioning attribute is marks.
+ create table student_a14(
+stud_id nuber primary key,
+marks number 
+)
+partition by range (marks) (
+partition fail values less than (45),
+partition second class  less than (60),
+partition first class values less than(75),
+partition distinct class values less than  (100)
+);
+//table created
+
+insert into student_A14 values (1,'pankaj', 90);
+insert into student_A14 values (2,'parshuram', 50);
+insert into student_A14 values (3,'atharv', 66);
+insert into student_A14 values (4,'vaibav', 44);
+ 
+1.	Display contents of the table. 
+select * from student_A14;
+/
+2.	Display the details of the students who failed
+select * from student_A14 partition (fail);
+/
+3.	Display the details of the students of "second class". 
+select * from student_A14 partition (second class);
+/
+4.	Display the details of the students of "First class". 
+select * from student_A14 partition (first class);
+/
+5.	Display the name of partitions. 
+select_partition_name
+from user_tab_partitions
+where table_name ='student_A14';
+/
+6.	Display the details of students who passed with distinctions.
+select * from student_A14 partition (distinct class);
+/
+7.	Display the number of students who failed.
+select count(*) from student_A14 partition (fail);
+/
+8.	Display the details of the student who scored highest marks .
+select*
+from student_A14
+where marks =(select maax(marks) from student_A14);
+/
+9.	Split the partition fail to f1 with marks less than 30 and f2 to marks less than 45. 
+
+alter table student_A14 split partition fail at (30) into (partition f1, partition f2);
+/
+10.	Merge f1, f2 into a new partition pp1.
+alter table student_A14 merge partitions f1, f2 into partition pp1;
+/
+11.	Drop the partition dist_class. 
+alter table student_A14 drop partition dist_class;
+/
+12.	Add a partition p_new for storing the marks less than 100. 
+alter table student_A14
+add partition p_new values  less than (100);
+/
+
+
+
+
+Q2. Create a table purchase with attributes p_id, p_name and p_amt using range partitioning create the following six partitions - P1- amount less than 1000, 
+P2- amount less than 2000, 
+P3- amount less than 3000, 
+P4- amount less than 4000, 
+     P5- amount less than 5000, 
+   P6- amount less than 10000
+
+create table purchase_A14(
+p_id number primary key,
+p_name varchar(20),
+p_amt number 
+)
+partition by range (p_amt) (
+partition p1 values less than (1000),
+partition p2 values less than (2000),
+partition p3 values less than (3000),
+partition p4 values less than (4000),
+partition p5 values less than (5000),
+partition p6 values less than (10000)
+);
+// table created
+insert into purchase_A14(1,'purchase A', 800);
+insert into purchase_A14(2,'purchase B', 1800);
+insert into purchase_A14(3,'purchase C', 2800);
+insert into purchase_A14(4,'purchase D', 3800);
+insert into purchase_A14(5,'purchase E', 4800);
+insert into purchase_A14(6,'purchase F', 9000);
+select * from purchase_A14;
+
+1. Dislay the purchase details having the maximum purchase amount in partition p3. 
+select * from purchase_A14 partition (p3)
+where p_amt = (select max(p_amt) from purchase_A14 partition (p3));
+/
+2. Split the partition p1 into pp1 and pp2 with the amount less than 500 and pp2 greater than 500 to pp2. 
+alter table purchase_A14 split partition p1 at (500) into (partition pp1, partition pp2);
+/
+3. Merge the partition pp1 and pp2 into a new partition.
+alter table purchase_A14 merge partitions pp1, pp2 into partition new_p1; 
+/
+
+
+
+Q.3 Create a table tax details with attributes dept_no, name, tax_amt, state with three partitions p1, p2 and p3 using the
+partition attribute tax_amt(range partition) partition p1 for tax < 5000, partition p2 for tax < 10000, p3 for tax < 20000. 
+
+create table tax_detailsA14 (
+dept_no number primary key,
+name varchar(20),
+tax_amt number,
+state varchar(20)
+) 
+partition by range (tax_amt) (
+partition p1 values less than (5000),
+partition p2 vlues less than (10000),
+partition p3 values less than (20000)
+);
+//table created
+
+insert into tax_detailsA14 values (1, 'finance', 4500, 'Mharashtra');
+insert into tax_detailsA14 values (2, 'hr', 7500, 'Karnataka'); 
+insert into tax_detailsA14 values (3, 'it', 12000, 'Delhi'); 
+insert into tax_detailsA14 values (4, 'admin', 18000, 'Tamil Nadu'); 
+insert into tax_detailsA14 values (5, 'sales', 3500, 'Kerla'); 
+/
+1. Display the partition wise data.
+select * from tax_detailsA14 partition(p1);
+/
+select * from tax_detailsA14 partition(p2);
+/
+select * from tax_detailsA14 partition(p3);
+/
+2.Display the details if the tax amount is greater than 1000 
+select * from tax_details whwere tax_amt > 1000;
+/
+3. Display the department having maximum tax amount .
+select * from tax_detailsA14 
+where tax_amt = (select max(tax_amt) from tax_detailsA14);
+/
+4. Display the state and department having minimum tax amount.
+select state, name from tax_amt = (select min(tax_amt) from tax_detailsA14);
+/
+5. Drop existing partition p3.
+alter table tax_detailsA14
+drop partition p3;
+/
+6. Create a new partition p4 to store all the values greater than 10000.
+alter table tax_detailsA14
+add partition p4 values less than (maxvalue);
+/
+7. Split the partition p2 to s1 and s2 at 8000.
+alter table tax_detailsA14 split partition p2 at (8000) into (partition s1, partition s2);
+/
+8. Merge the partitions p1 and s1 into p11. 
+alter table tax_detailsA14 merge parttions p1,s1 into partition p11;
+/
+9. Rename the partition p11 to p1_new.
+alter table tax_detailsA14 
+rename partition p11 to p1_new;
+/

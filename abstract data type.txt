@@ -1,0 +1,223 @@
+Abstract data type
+ Q.1 Create a table customer with attributes cid, name, address and price. 
+Create an abstract data type Name_Type for the attribute name with fname, lname. 
+Create an ADT Address_Type for the attribute address with street, city, pincode. 
+
+crteate type address_type as object 
+(
+fname varchar(10),
+lname varchar(10)
+);/
+//type created
+
+create type addres_type as object 
+( 
+street varchar(10),
+cirty varchar(10),
+pincode int
+);/
+//type created
+
+create table customer_A14
+(
+cid number primary key,
+name name_type,
+address address_type,
+price number
+);
+//table created
+
+insert into customer_A14 values (11,name_type('sahil','singh'),address_type('gtroad', 'thane', 421505),235);
+insert into customer_A14 values (12,name_type('vaibhav','janaskar'),address_type('bgrod','mumbai', 421506),255);
+insert into customer_A14 values (13,name_type('harshad','bagal')address_type('ghroad', 'mumbra',421508),555);
+
+desc customer_A14
+/
+1. Display the first name of all the customers.
+select c.name.fnmae from customer_A14 c;
+/
+2. Display the name of all customers.
+select c.name.fname ||' '||c.name.lname from customer_A14 c;
+/
+3. Display all the details of customer whose first name starts with ‘h’. 
+select c.name.fname,c.address.street,c.address.city,c.address.pincode,price from customer_A14 c where c.name.fname like'p%';
+/
+4. Display the details of customers where city is ‘Mumbai’.
+select c.name.fname,c.name.lname,c.address.street,c.address.city,c.address.pincode,price from customer_A14 c where c.address.city='mumbai';
+
+
+
+Q2. Create a table with following details using Abstact datatype: 
+name_type 
+•	Fname • 	Lname 
+address _type 
+•	Street 
+•	City 
+•	Pin code 
+Author_type 
+•	Name 
+•	Address 
+publisher_type 
+•	Name 
+•	Address 
+Create the table BOOK with following attributes 
+•	Book id 
+•	Book title 
+•	Price 
+•	Author 
+•	Publisher
+
+create type name_typeA14 as object(
+fname varchar(20),
+lname varchar(20)
+); /
+//type created
+
+create type address_typeA14 as object (
+street varchar(30),
+city varchar(20),
+pincode number
+);/
+//type created
+ 
+create type publisher_typeA14 as object(
+name name_typeA14,
+address address_typeA14
+);/
+//type created
+
+create table book_A14 (
+book_id number primary key,
+book_title varchar2(100),
+price number,
+author author_typeA14,
+publisher publisher_typeA14,
+publisher publisher_typeA14,
+);
+//table created
+
+insert into book_A14 values(
+1,'corejava',500,
+author_typeA14(name_typeA14('rahul', 'boge'),address_typeA14('ct place', 'pune',421502)),
+publisher_typeA14(name_typeA14('hh', 'publishers'), address_typeA14('jai nagar', 'mharashtra',555686))
+);
+/
+insert into book_A14 values(
+2,'kolba',900,
+author_typeA14(name_typeA14('sahil', 'sarge'),address_typeA14('ct place', 'patna',421507)),
+publisher_typeA14(name_typeA14('tmh', 'publishers'), address_typeA14('kasol', 'bihar',555687))
+);
+/
+insert into book_A14 values(
+3,'molap',300,
+author_typeA14(name_typeA14('kumar', 'patil'),address_typeA14('ct place', 'mumbai',421509)),
+publisher_typeA14(name_typeA14('tmh', 'publishers'), address_typeA14('vidhan bhavan', 'mharashtra',555685))
+);
+/
+1. Display all the books published by “tmh”.
+select * from book_A14 b
+where b.publisher.name.fname='tmh';
+/
+2. Display the first name of all publishers. 
+select book_A14 b;
+/
+3. Display first name of all authors.
+select b.author.name.fname
+from book_A14 b;
+/
+4. All books details written by author with fname ‘Rahul’.
+select * from  book_A14 b
+where b. author.name.fname='rahul';
+/
+5. Display all the information from BOOK table where price in between 250 and
+ 400 where the Author is from ‘Mumbai’ and ‘Delhi’
+select * from book_A14 b
+where price between 250 and 400 
+and (b.author.address.city='mumbai' or b.author.address.city ='delhi');
+/
+6. Display the number of books published by each author.
+select b.author.name.fname,count(*) from book_A14 b
+group by b.author.name.fname;
+/
+7. Display the name of author who wrote only one book.
+select b.author.name.fname from book_A14 b 
+group by b.author.name.fname
+having count(*) =1;
+/
+
+
+
+Q.3 Create the following Employee table with eno, ename, hiredate, salary, comm and dept.
+ Create the abstract data type ename_type, hire_type and dept_type. 
+•	Employee 
+Eno no_type 
+Ename name_type Hiredate hire_type 
+salary comm 
+dept dept_type 
+ 
+•	no_type 
+id 
+designation 
+ 
+•	name_type 
+name address 
+ 
+•	hire_type day month year 
+ 
+•	dept_type dno dname 
+loc 
+
+
+create type names_type_A14 as object
+(
+name varchar(7),
+address varchar(10)
+);
+/
+//type created
+
+create type no_typeA14 as object
+(
+id number,
+designation varchar(5)
+);
+/
+//type created
+ 
+create type hire_type_A14 as object
+(
+day number,
+month varchar(10),
+year number
+);
+/
+//type created
+
+create type dept_type_A14 as object
+(
+dno number,
+dname varchar(10)'
+loc varchar(10)
+);
+/
+crteate table employee_A14
+(
+eno no_type_A14
+ename names_type_A14,
+hiredate hire_type_A14,
+salry number,
+com number,
+dept dept_type_A!4
+);
+// table created
+
+insert into employee_A14 values(no_type_A14(10,'hr'),name_type_A14('sahil','thane',),hire_type_A14(21,'june'2021),20000,3000,dept_type_A14(121,'hr','dadar'));
+insert into employee_A14 values(no_type_A14(11,'sde'),name_type_A14('vaibhav','mumbai',),hire_type_A14(21,'august'2010),50000,8000,dept_type_A14(651,'it','nerul'));
+
+1. Display all employees with designation as Analyst and hired after June 2010.
+ select e.name from employe_A14 e where e.no.designation='analy' and e.hiredate.year=2010;
+/
+2. Display all employees working for HR department situated in thane.
+select e.ename.name from employe_A14 e where e.dept.dname='hr' and e.ename.address='thane';
+/
+

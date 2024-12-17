@@ -1,0 +1,73 @@
+KNN
+
+Example 1: KNN Using Iris Dataset
+
+
+
+# KNN Using Iris Dataset
+
+# Load the Iris dataset
+data(iris)
+
+# View the structure of the dataset
+str(iris)
+
+# Split the dataset into training and testing sets
+train <- iris[1:120, -5]  # Training features
+test <- iris[121:150, -5] # Testing features
+
+# Load the class library
+library(class)
+
+# Create the KNN model
+model <- knn(train, test, iris[1:120, 5], k = 6)
+
+# Generate a Confusion Matrix
+cm <- table(iris[121:150, 5], model)  # table(actual, predicted)
+cm
+
+# Calculate Accuracy
+accuracy <- sum(diag(cm)) / length(iris[121:150, 5])
+accuracy
+
+# Display Accuracy in Percentage
+sprintf("Accuracy: %.2f%%", accuracy * 100)
+
+
+Example 2: KNN Using Cancer Dataset
+
+# KNN Using Cancer Dataset
+
+# Install and load the required library
+# install.packages("class")
+library(class)
+
+# Load the Cancer dataset
+wdbc <- read.csv("cancer_dataset.csv", header = TRUE)
+
+# Data Cleaning
+# Remove the ID column as it is not needed
+wdbc <- wdbc[, -1]
+
+# Normalize the data
+data_norm <- function(x) { (x - min(x)) / (max(x) - min(x)) }
+wdbc_norm <- data.frame(lapply(wdbc[, -1], data_norm))
+
+# View summary of original and normalized data
+summary(wdbc[, 2:5])
+summary(wdbc_norm[, 1:4])
+
+# Create Training and Testing datasets
+wdbc_train <- wdbc_norm[1:450, ]
+wdbc_test <- wdbc_norm[451:569, ]
+
+# Apply the KNN model
+# Choosing k = 21 (sqrt of total observations is a common heuristic for k)
+wdbc_pred <- knn(wdbc_train, wdbc_test, wdbc[1:450, 1], k = 21)
+
+# View predictions
+wdbc_pred
+
+# Generate a Confusion Matrix
+cm <- table(wdbc[451:569, 1], wdbc_pred)  # table(actual, predicted)
+cm

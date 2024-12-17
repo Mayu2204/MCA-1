@@ -1,0 +1,30 @@
+# Simple Linear Regression
+
+# Clear workspace and perform garbage collection
+rm(list = ls())
+gc()
+
+# Data vectors
+x <- c(151, 174, 138, 186, 128, 136, 179, 163, 152, 131)  # Heights
+y <- c(63, 81, 56, 91, 47, 57, 76, 72, 62, 48)            # Weights
+
+# Scatter plot of the data
+plot(x, y, col = "blue", main = "X-Y Plot for Regression", pch = 8,
+     xlab = "Height", ylab = "Weight")
+
+# Apply the lm() function to create the linear model
+reg <- lm(y ~ x)
+
+# Summary of the regression model
+print(summary(reg))
+
+# Plotting the regression line
+plot(x, y, col = "blue", main = "Height & Weight Regression",
+     pch = 10, xlab = "Height", ylab = "Weight")
+abline(reg, col = "red")
+
+# Predict the weight for a given height
+height <- data.frame(x = 165)
+predicted_weight <- predict(reg, newdata = height)
+
+print(predicted_weight)

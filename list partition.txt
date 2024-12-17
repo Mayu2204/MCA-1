@@ -1,0 +1,56 @@
+List partition 
+
+Q4. Create a table to store customer details custid, cname, state with 4 different partitions 
+for 4 different regions north, south, east and west using the list partition.
+create table customer_details (
+cusid number primary key, 
+ cname varchar(20),
+state varchar(20)
+)
+partition by list(state)(
+partition north values('assam','delhi','up'),
+partition south values('chennai','kerla','tamilnadu'),
+partition east values('westbengal','arunachal','odisha'),
+partition west values('maharashtra','gujrat','goa')
+);
+//table created
+ 
+insert into customer_details values (101, 'vaibhav', 'mharashtra');
+insert into customer_details values (102, 'sahil', 'goa');
+
+
+
+select * from customer_details;
+/
+ 
+1.	Display data from all the partitions. 
+select * from customrt_details partition(north);
+/
+select * from customer_details partition(south);
+/
+
+
+2. Split the partition south into s1 with Kerala and tamilnadu and s2 with the remaining data. 
+alter table customer_details split partition south values ('kerla', 'chennai')
+into (partiotion p1, partition p2);
+/
+3.Display the contents of new partition.
+select * from customer_details partition (p1);
+/
+select * from customer_details partition (p2);
+
+4. Merge the partition back. 
+alter table customer_details merge partition p1,p2 into partition south;
+/
+5. Modify an existing partition east to add Assam and Manipur.
+alter table customer_details modify partition east add values ('manipur');
+/
+6. Add new partition Central.
+alter table customer_details add partition central values ('mp');
+/
+7. Truncate the partition west. 
+alter table cutomer_details
+truncate partition west;
+/
+
+
